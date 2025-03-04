@@ -1,3 +1,4 @@
+// Verification.tsx
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -7,6 +8,7 @@ export default function Verification() {
 
     // Function to navigate to OTPVerification screen
     const handleOTPSelection = (method) => {
+        console.log(`Navigating to OTP with method: ${method}`); // Add this line for debugging
         navigation.navigate('OTP', { method });
     };
 
@@ -119,14 +121,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     footerText: {
-        fontSize: 12,
+        fontSize: 15,
         color: '#666',
         marginBottom: 4,
     },
     logoImage: {
-        height: 28,
-        width: 60,
+        height: 40,
+        width: 40,
         resizeMode: 'contain',
     },
 });
-

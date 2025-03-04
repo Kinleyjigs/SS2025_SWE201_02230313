@@ -173,14 +173,13 @@ const styles = StyleSheet.create({
   },
 
   footerText: {
-    fontSize: 12,
+    fontSize: 15,
     color: '#666',
     marginBottom: 4,
-  },
-
+},
   logoImage: {
-    height: 28,
-    width: 60,
+    height: 40,
+    width: 40,
     resizeMode: 'contain',
-  },
+},
 });
