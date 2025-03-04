@@ -5,7 +5,6 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useNavigation } from "@react-navigation/native";
-import { Button } from "react-native-paper";
 
 const screenWidth = Dimensions.get("window").width;
 
@@ -30,53 +29,59 @@ const slides = [
 
 export default function HomeScreen() {
   const navigation = useNavigation();
-  const scrollViewRef = useRef<ScrollView>(null);
+  const scrollViewRef = useRef(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   return (
     <SafeAreaView style={styles.container}>
-          <ScrollView contentContainerStyle={styles.container}>
-      {/* Logo */}
-      <View style={styles.header}>
-        <Image source={require("@/assets/images/Gojek_logo.png")} style={styles.logo} />
+      <ScrollView contentContainerStyle={styles.scrollContent}>
+        {/* Logo */}
+        <View style={styles.header}>
+          <Image source={require("@/assets/images/Gojek_logo.png")} style={styles.logo} />
+        </View>
+
+        {/* Image Slider */}
+        <View style={styles.imageContainer}>
+          <Image source={slides[currentIndex].image} style={styles.image} resizeMode="contain" />
+        </View>
+
+        {/* Title and Subtitle */}
+        <View style={styles.textContainer}>
+          <Text style={styles.title}>{slides[currentIndex].title}</Text>
+          <Text style={styles.subtitle}>{slides[currentIndex].subtitle}</Text>
+        </View>
+
+        {/* Dots Indicator - Now Horizontal */}
+        <View style={styles.dotsContainer}>
+          {slides.map((_, index) => (
+            <TouchableOpacity
+              key={index}
+              style={[styles.dot, currentIndex === index && styles.activeDot]}
+              onPress={() => setCurrentIndex(index)}
+            />
+          ))}
+        </View>
+      </ScrollView>
+
+      {/* Bottom Buttons Section */}
+      <View style={styles.bottomContainer}>
+        {/* Login Buttons */}
+        <TouchableOpacity 
+          style={styles.loginButton} 
+          onPress={() => navigation.navigate("Login")}
+        >
+          <Text style={styles.loginText}>Log in</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity style={styles.signupButton}>
+          <Text style={styles.signupText}>I'm new, sign me up</Text>
+        </TouchableOpacity>
+
+        {/* Terms */}
+        <Text style={styles.terms}>
+          By logging in or registering, you agree to our <Text style={styles.link}>Terms of service</Text> and <Text style={styles.link}>Privacy policy</Text>.
+        </Text>
       </View>
-
-      
-      {/* Image Slider */}
-      <Image source={slides[currentIndex].image} style={styles.image} />
-
-      {/* Title and Subtitle */}
-      <Text style={styles.title}>{slides[currentIndex].title}</Text>
-      <Text style={styles.subtitle}>{slides[currentIndex].subtitle}</Text>
-
-      {/* Dots Indicator */}
-      <View style={styles.dots}>
-        {slides.map((_, index) => (
-          <TouchableOpacity
-            key={index}
-            style={[styles.dot, currentIndex === index && styles.activeDot]}
-            onPress={() => setCurrentIndex(index)}
-          />
-        ))}
-      </View>
-
-    </ScrollView>
-      {/* Login Buttons */}
-      <TouchableOpacity 
-        style={styles.loginButton} 
-        onPress={() => navigation.navigate("Login")}
-      >
-        <Text style={styles.loginText}>Log in</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity style={styles.signupButton}>
-        <Text style={styles.signupText}>I'm new, sign me up</Text>
-      </TouchableOpacity>
-
-      {/* Terms */}
-      <Text style={styles.terms}>
-        By logging in or registering, you agree to our <Text style={styles.link}>Terms of service</Text> and <Text style={styles.link}>Privacy policy</Text>.
-      </Text>
     </SafeAreaView>
   );
 }
@@ -84,10 +89,14 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "flex-start",
-    padding: 20,
     backgroundColor: "#fff",
+  },
+
+  scrollContent: {
+    flexGrow: 1,
+    alignItems: "center",
+    padding: 20,
+    paddingBottom: 30,
   },
 
   header: {
@@ -95,46 +104,55 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "flex-start",
     alignItems: "flex-start",
-    paddingVertical: 2,
+    paddingVertical: 10,
     paddingLeft: 8,
   },
 
   logo: {
     width: 80,
     height: 30,
-  },
-
-  slide: {
-    width: screenWidth,
-    height: 500,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
-  },
-
-  illustration: {
-    width: "90%",
-    height: 180,
     resizeMode: "contain",
   },
 
+  imageContainer: {
+    width: "100%",
+    height: 220,
+    marginVertical: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  image: {
+    width: "100%",
+    height: "100%",
+  },
+
+  textContainer: {
+    width: "100%",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+
   title: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: "bold",
     textAlign: "center",
-    marginTop: 10,
+    marginBottom: 8,
   },
 
   subtitle: {
-    fontSize: 14,
+    fontSize: 16,
     color: "#555",
     textAlign: "center",
+    paddingHorizontal: 20,
+    lineHeight: 22,
   },
 
-  dotContainer: {
-    flexDirection: "row",
+  dotsContainer: {
+    flexDirection: "row",   // This makes the dots horizontal
     justifyContent: "center",
-    marginBottom: 50,
+    alignItems: "center",
+    marginTop: 20,
   },
 
   dot: {
@@ -142,45 +160,56 @@ const styles = StyleSheet.create({
     height: 8,
     borderRadius: 4,
     backgroundColor: "#ccc",
-    marginHorizontal: 5,
+    marginHorizontal: 5,   // Horizontal spacing between dots
   },
 
   activeDot: {
-    backgroundColor: "green",
+    backgroundColor: "#00AA13",  // Gojek green color
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+  },
+
+  bottomContainer: {
+    padding: 20,
+    paddingBottom: 30,
+    borderTopWidth: 1,
+    borderTopColor: "#f0f0f0",
+    alignItems: "center",
   },
 
   loginButton: {
-    width: "90%",
+    width: "100%",
     height: 50,
-    padding: 15,
-    backgroundColor: "green",
-    borderRadius: 50,
+    backgroundColor: "#00AA13",  // Gojek green
+    borderRadius: 25,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 10,
+    marginBottom: 15,
+    elevation: 2,
   },
 
   loginText: {
     color: "white",
-    fontSize: 13,
+    fontSize: 16,
     fontWeight: "bold",
-    textAlign: "center",
   },
 
   signupButton: {
-    width: "90%",
-    padding: 15,
+    width: "100%",
+    height: 50,
     backgroundColor: "white",
-    borderRadius: 50,
+    borderRadius: 25,
     borderWidth: 1,
-    borderColor: "green",
+    borderColor: "#00AA13",
     alignItems: "center",
+    justifyContent: "center",
     marginBottom: 20,
   },
 
   signupText: {
-    color: "green",
-    fontSize: 13,
+    color: "#00AA13",
+    fontSize: 16,
     fontWeight: "bold",
   },
 
@@ -188,9 +217,12 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "#777",
     textAlign: "center",
+    lineHeight: 18,
+    paddingHorizontal: 20,
   },
 
   link: {
-    color: "green",
+    color: "#00AA13",
+    fontWeight: "500",
   },
 });
