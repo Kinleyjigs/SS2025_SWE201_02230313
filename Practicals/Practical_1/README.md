@@ -48,3 +48,25 @@ Join our community of developers creating universal apps.
 
 - [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
 - [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+
+## Fixing Errors
+![alt text](assets/images/error.png)
+
+1. Open the `react-async-hook` package file
+
+Navigate to:
+
+`node_modules/react-async-hook/package.json`
+
+
+ 2. Find this line in the file:
+
+```json
+"module": "react-async-hook.esm.js",
+```
+
+3. Replace it with:
+```json
+"module": "dist/index.js",
+```
+
