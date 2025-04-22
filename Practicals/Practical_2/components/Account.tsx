@@ -1,3 +1,6 @@
+/// This component is used to update the user profile info.
+/// It is activated when the user is logged in.
+
 import { useState, useEffect } from 'react'
 import { supabase } from '../lib/supabase'
 import { StyleSheet, View, Alert } from 'react-native'

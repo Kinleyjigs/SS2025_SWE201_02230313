@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
-import { Alert, StyleSheet, View, AppState } from 'react-native'
+import { Alert, StyleSheet, View, AppState, Text } from 'react-native'
 import { supabase } from '../lib/supabase'
 import { Button, Input } from '@rneui/themed'
+import MagicLinkLogin from './MagicLink'
+import { useNavigation } from '@react-navigation/native'
 
-// Tells Supabase Auth to continuously refresh the session automatically if
-// the app is in the foreground. When this is added, you will continue to receive
-// `onAuthStateChange` events with the `TOKEN_REFRESHED` or `SIGNED_OUT` event
-// if the user's session is terminated. This should only be registered once.
 AppState.addEventListener('change', (state) => {
   if (state === 'active') {
     supabase.auth.startAutoRefresh()
@@ -20,13 +18,14 @@ export default function Auth() {
   const [password, setPassword] = useState('')
   const [loading, setLoading] = useState(false)
 
+  const navigation = useNavigation() // Hook for navigation
+
   async function signInWithEmail() {
     setLoading(true)
     const { error } = await supabase.auth.signInWithPassword({
-      email: email,
-      password: password,
+      email,
+      password,
     })
-
     if (error) Alert.alert(error.message)
     setLoading(false)
   }
@@ -37,13 +36,24 @@ export default function Auth() {
       data: { session },
       error,
     } = await supabase.auth.signUp({
-      email: email,
-      password: password,
+      email,
+      password,
     })
-
     if (error) Alert.alert(error.message)
     if (!session) Alert.alert('Please check your inbox for email verification!')
     setLoading(false)
+  }
+
+  async function signInWithMagicLink() {
+    setLoading(true)
+    const { error } = await supabase.auth.signInWithOtp({ email })
+    if (error) Alert.alert(error.message)
+    else Alert.alert('Check your email for the magic link!')
+    setLoading(false)
+
+    // Navigate to MagicLinkLogin page
+    navigation.navigate('MagicLinkLogin')  // Assuming you've set up MagicLinkLogin in the navigation stack
+
   }
 
   return (
@@ -55,7 +65,7 @@ export default function Auth() {
           onChangeText={(text) => setEmail(text)}
           value={email}
           placeholder="email@address.com"
-          autoCapitalize={'none'}
+          autoCapitalize="none"
         />
       </View>
       <View style={styles.verticallySpaced}>
@@ -64,16 +74,27 @@ export default function Auth() {
           leftIcon={{ type: 'font-awesome', name: 'lock' }}
           onChangeText={(text) => setPassword(text)}
           value={password}
-          secureTextEntry={true}
+          secureTextEntry
           placeholder="Password"
-          autoCapitalize={'none'}
+          autoCapitalize="none"
         />
       </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button title="Sign in" disabled={loading} onPress={() => signInWithEmail()} />
+        <Button title="Sign in" disabled={loading} onPress={signInWithEmail} />
       </View>
       <View style={styles.verticallySpaced}>
-        <Button title="Sign up" disabled={loading} onPress={() => signUpWithEmail()} />
+        <Button title="Sign up" disabled={loading} onPress={signUpWithEmail} />
+      </View>
+
+      {/* Magic Link Section */}
+      <View style={[styles.verticallySpaced, styles.mt20]}>
+        <Text style={styles.orText}>or</Text>
+        <Text style={styles.altText}>You can also log in with</Text>
+        <Button
+          title="Login with Magic Link"
+          disabled={loading}
+          onPress={signInWithMagicLink}
+        />
       </View>
     </View>
   )
@@ -81,8 +102,10 @@ export default function Auth() {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 40,
+    flex: 1,
     padding: 12,
+    alignItems: 'center', // horizontal center
+
   },
   verticallySpaced: {
     paddingTop: 4,
@@ -92,4 +115,15 @@ const styles = StyleSheet.create({
   mt20: {
     marginTop: 20,
   },
+  orText: {
+    textAlign: 'center',
+    fontWeight: 'bold',
+    marginBottom: 4,
+  },
+  altText: {
+    textAlign: 'center',
+    marginBottom: 10,
+    color: '#666',
+  },
 })
+

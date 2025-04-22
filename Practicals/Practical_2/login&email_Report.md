@@ -44,12 +44,16 @@ npx expo install @supabase/supabase-js
 
 ### Results
 - Users can sign up, log in
+
 ![alt text](assets/login.png)
 
 - manage their profile.
+
 ![alt text](assets/UpdateProfile.png)
 
+
 - Sessions are saved in and refreshed automatically using AsyncStorage.
+
 ![alt text](assets/updateSupabase.png)
 
 
