@@ -45,17 +45,18 @@ npx expo install @supabase/supabase-js
 ### Results
 - Users can sign up, log in
 
-![alt text](assets/login.png)
+<img src="assets/login.png" alt="Magic Link Option" width="200"/>
+
 
 - manage their profile.
 
-![alt text](assets/UpdateProfile.png)
+<img src="assets/UpdateProfile.png" alt="Magic Link Option" width="200"/>
+
 
 
 - Sessions are saved in and refreshed automatically using AsyncStorage.
 
-![alt text](assets/updateSupabase.png)
-
+<img src="assets/updateSupabase.png" alt="Magic Link Option" width="500"/>
 
 ### Conclusion
 This lab shows how to build a working user authentication system using Supabase and React Native. The process was simple and effective, with persistent sessions and clean UI.
